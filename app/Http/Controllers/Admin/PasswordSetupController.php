@@ -42,6 +42,7 @@ class PasswordSetupController extends Controller
             'password_reset_token' => null,
             'password_reset_expires_at' => null,
             'email_verified_at' => now(),
+            'status' => 'active',
         ]);
 
         return redirect()->route('filament.admin.auth.login')

@@ -34,7 +34,7 @@ class AddAdminAccountsResource extends Resource
                         Forms\Components\TextInput::make('admin_name')
                             ->required()
                             ->maxLength(255)
-                            ->label('Full Name'),
+                            ->label('Admin Name'),
                             
                         Forms\Components\TextInput::make('admin_email')
                             ->email()
