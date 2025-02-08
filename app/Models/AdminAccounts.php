@@ -23,6 +23,7 @@ class AdminAccounts extends Authenticatable
         'password',
         'admin_avatar',
         'status',
+        'role',
         'password_reset_token',
         'password_reset_expires_at',
         'email_verified_at'

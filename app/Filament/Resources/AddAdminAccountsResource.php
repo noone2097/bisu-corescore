@@ -43,6 +43,14 @@ class AddAdminAccountsResource extends Resource
                             ->maxLength(255)
                             ->label('Email Address'),
 
+                        Forms\Components\Select::make('role')
+                            ->required()
+                            ->options([
+                                'Research Admin' => 'Research Admin',
+                                'Office Admin' => 'Office Admin',
+                            ])
+                            ->label('Admin Role'),
+
                         Forms\Components\Hidden::make('status')
                             ->default('inactive'),
                     ])->columns(2),

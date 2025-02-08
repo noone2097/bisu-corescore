@@ -10,6 +10,11 @@ class EditAdminAccounts extends EditRecord
 {
     protected static string $resource = AdminAccountsResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return AdminAccountsResource::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

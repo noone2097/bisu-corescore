@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('password_reset_token')->nullable();
             $table->timestamp('password_reset_expires_at')->nullable();
+            $table->enum('role', ['Research Admin', 'Office Admin']);
             $table->rememberToken();
             $table->string('status')->default('inactive');
             $table->timestamps();

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\AddAdminAccountsResource\Pages;
 
 use App\Filament\Resources\AddAdminAccountsResource;
+use App\Filament\Resources\AdminAccountsResource;
 use App\Notifications\AdminPasswordSetup;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Str;
@@ -14,7 +15,7 @@ class CreateAddAdminAccounts extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl();
+        return AdminAccountsResource::getUrl('index');
     }
     
     protected function mutateFormDataBeforeCreate(array $data): array

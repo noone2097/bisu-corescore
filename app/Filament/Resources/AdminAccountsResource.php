@@ -47,6 +47,13 @@ class AdminAccountsResource extends Resource
                     ->maxLength(255)
                     ->unique(ignoreRecord: true)
                     ->label('Admin Email'),
+                Forms\Components\Select::make('role')
+                    ->required()
+                    ->options([
+                        'Research Admin' => 'Research Admin',
+                        'Office Admin' => 'Office Admin',
+                    ])
+                    ->label('Admin Role'),
             ]);
     }
 
@@ -64,6 +71,13 @@ class AdminAccountsResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('admin_email')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('role')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Research Admin' => 'info',
+                        'Office Admin' => 'warning',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('email_verified_at')
                 ->getStateUsing(function ($record) {
                     // Ensure the email_verified_at field is not null
@@ -119,9 +133,8 @@ class AdminAccountsResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('send_setup_email')
-                    ->label('Send Setup Email')
+                    ->label('Send Email')
                     ->icon('heroicon-o-envelope')
                     ->color('success')
                     ->requiresConfirmation()
@@ -147,6 +160,7 @@ class AdminAccountsResource extends Resource
                             ->body('A password setup email has been sent to the admin.')
                             ->send();
                     }),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
