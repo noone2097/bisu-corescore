@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('admin_avatar')->nullable();
             $table->string('admin_name');
-            $table->string('admin_email')->unique();
+            $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('password_reset_token')->nullable();

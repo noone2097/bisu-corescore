@@ -7,10 +7,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 
-class AdminAccounts extends Authenticatable
+class AdminAccounts extends Authenticatable implements FilamentUser, HasName
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+
+    public function getFilamentName(): string
+    {
+        return $this->admin_name ?? 'Admin User';
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $panel->getId() === 'office-admin' && $this->role === 'Office Admin';
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +32,7 @@ class AdminAccounts extends Authenticatable
      */
     protected $fillable = [
         'admin_name',
-        'admin_email',
+        'email',
         'password',
         'admin_avatar',
         'status',
@@ -50,4 +63,5 @@ class AdminAccounts extends Authenticatable
         'password_reset_expires_at' => 'datetime',
         'password' => 'hashed',
     ];
+
 }

@@ -41,7 +41,7 @@ class AdminPasswordSetup extends Notification implements ShouldQueue
         
         Mail::send([], [], function ($message) use ($notifiable, $url) {
             $message
-                ->to($notifiable->admin_email)
+                ->to($notifiable->email)
                 ->subject('Set Up Your Admin Account Password')
                 ->html(
                     "Hello {$notifiable->admin_name}!<br><br>" .

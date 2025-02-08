@@ -45,7 +45,13 @@ class PasswordSetupController extends Controller
             'status' => 'active',
         ]);
 
-        return redirect()->route('filament.admin.auth.login')
+        // Redirect based on admin role
+        $loginRoute = match ($admin->role) {
+            'Office Admin' => 'filament.office-admin.auth.login',
+            default => 'filament.admin.auth.login',
+        };
+
+        return redirect()->route($loginRoute)
             ->with('status', 'Your password has been set successfully. You can now log in.');
     }
 }

@@ -36,7 +36,7 @@ class AddAdminAccountsResource extends Resource
                             ->maxLength(255)
                             ->label('Admin Name'),
                             
-                        Forms\Components\TextInput::make('admin_email')
+                        Forms\Components\TextInput::make('email')
                             ->email()
                             ->required()
                             ->unique(ignoreRecord: true)
