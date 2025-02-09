@@ -26,13 +26,19 @@
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Digital Signature</label>
         <div class="border border-gray-300 rounded-md p-4">
-            <canvas id="signatureCanvas" class="border border-gray-200 w-full" height="200"></canvas>
+            <canvas 
+                id="signatureCanvas" 
+                class="border border-gray-200 w-full bg-white rounded-md" 
+                width="600" 
+                height="200">
+            </canvas>
             <input type="hidden" name="signature" id="signature" required />
-            <div class="mt-2 flex justify-end space-x-2">
+            <div class="mt-2 flex justify-between items-center">
+                <p class="text-sm text-gray-500">Please sign above using your mouse or touch screen</p>
                 <button type="button" 
-                        class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                        class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50"
                         onclick="clearSignature()">
-                    Clear Signature
+                    Clear
                 </button>
             </div>
         </div>
@@ -46,21 +52,51 @@
     
     document.addEventListener('DOMContentLoaded', function() {
         const canvas = document.getElementById('signatureCanvas');
+        
+        // Get canvas offset for coordinate adjustment
+        const rect = canvas.getBoundingClientRect();
+        const offsetX = rect.left;
+        const offsetY = rect.top;
+        
         signaturePad = new SignaturePad(canvas, {
-            backgroundColor: 'rgb(255, 255, 255)'
+            minWidth: 2,
+            maxWidth: 4,
+            penColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgb(255, 255, 255)",
+            throttle: 0, // Remove throttling for better responsiveness
+            velocityFilterWeight: 0.5, // Decrease velocity filtering for more accurate points
         });
 
-        // Resize canvas to fill its container width
-        function resizeCanvas() {
-            const ratio = Math.max(window.devicePixelRatio || 1, 1);
-            canvas.width = canvas.offsetWidth * ratio;
-            canvas.height = canvas.offsetHeight * ratio;
-            canvas.getContext("2d").scale(ratio, ratio);
-            signaturePad.clear();
-        }
+        // Add coordinate adjustment for both mouse and touch events
+        canvas.addEventListener('mousemove', function(e) {
+            const point = {
+                x: e.clientX - offsetX,
+                y: e.clientY - offsetY
+            };
+            e._point = point;
+        }, { passive: true });
 
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
+        canvas.addEventListener('touchmove', function(e) {
+            const touch = e.touches[0];
+            const point = {
+                x: touch.clientX - offsetX,
+                y: touch.clientY - offsetY
+            };
+            e._point = point;
+        }, { passive: false });
+
+        // Prevent scrolling when touching the canvas
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+        });
+        
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        });
+        
+        canvas.addEventListener('touchend', function(e) {
+            e.preventDefault();
+        });
 
         // Update hidden input when signature changes
         signaturePad.addEventListener("endStroke", () => {
@@ -81,3 +117,9 @@
         }
     });
 </script>
+
+<style>
+    #signatureCanvas {
+        touch-action: none;
+    }
+</style>
