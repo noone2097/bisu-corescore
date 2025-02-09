@@ -33,7 +33,7 @@ class OfficePanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Office/Resources'), for: 'App\\Filament\\Office\\Resources')
             ->discoverPages(in: app_path('Filament/Office/Pages'), for: 'App\\Filament\\Office\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                \App\Filament\Office\Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Office/Widgets'), for: 'App\\Filament\\Office\\Widgets')
             ->widgets([

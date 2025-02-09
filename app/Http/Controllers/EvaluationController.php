@@ -9,10 +9,13 @@ use Illuminate\Http\Request;
 
 class EvaluationController extends Controller
 {
-    public function index()
+    public function index(Office $office = null)
     {
         $offices = Office::all();
-        return view('evaluations.form', compact('offices'));
+        $selectedOffice = $office;
+        $isOfficeLocked = !is_null($office);
+
+        return view('evaluations.form', compact('offices', 'selectedOffice', 'isOfficeLocked'));
     }
 
     public function store(Request $request)

@@ -25,14 +25,22 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Unit/Office Visited (Gibisita nga Opisina)</label>
-            <select name="office_id" 
-                    class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" 
-                    required>
-                <option value="">Select Office</option>
-                @foreach($offices as $office)
-                    <option value="{{ $office->id }}">{{ $office->office_name }}</option>
-                @endforeach
-            </select>
+            @if($isOfficeLocked)
+                <input type="hidden" name="office_id" value="{{ $selectedOffice->id }}">
+                <input type="text"
+                    class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md bg-gray-100"
+                    value="{{ $selectedOffice->office_name }}"
+                    readonly>
+            @else
+                <select name="office_id"
+                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                     required>
+                    <option value="">Select Office</option>
+                    @foreach($offices as $office)
+                        <option value="{{ $office->id }}">{{ $office->office_name }}</option>
+                    @endforeach
+                </select>
+            @endif
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Client Type (Klasi sa Bisita)</label>
