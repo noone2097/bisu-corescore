@@ -83,7 +83,7 @@ class AdminAccountsResource extends Resource
                     // Ensure the email_verified_at field is not null
                     if ($record->email_verified_at) {
                         // Parse the datetime value and format it
-                        return Carbon::parse($record->email_verified_at)->format('M j, Y : g:iA');
+                        return Carbon::parse($record->email_verified_at)->format('M j, Y : g:i A');
                     }
                     return null; // Return null if the field is null
                 })

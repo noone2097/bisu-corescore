@@ -27,19 +27,6 @@ class CreateAddAdminAccounts extends CreateRecord
         return $data;
     }
 
-    protected function afterCreate(): void
-    {
-        // Send password setup email
-        $this->record->notify(new AdminPasswordSetup($this->record->password_reset_token));
-        
-        // Show success notification
-        Notification::make()
-            ->success()
-            ->title('Invitation Sent')
-            ->body('A password setup email has been sent to ' . $this->record->admin_email)
-            ->send();
-    }
-
     public function getTitle(): string
     {
         return 'Add New Admin Account';

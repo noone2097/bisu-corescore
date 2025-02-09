@@ -59,7 +59,7 @@ class OfficeResource extends Resource
                     ->disk('public')
                     ->visibility('public')
                     ->circular()
-                    ->size(60)
+                    ->size(35)
                     ->defaultImageUrl(asset('images/bisu_logo.png')),
                 Tables\Columns\TextColumn::make('office_name')
                     ->searchable(),
@@ -68,7 +68,7 @@ class OfficeResource extends Resource
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->getStateUsing(function ($record) {
                         if ($record->email_verified_at) {
-                            return Carbon::parse($record->email_verified_at)->format('M j, Y : g:iA');
+                            return Carbon::parse($record->email_verified_at)->format('M j, Y : g:i A');
                         }
                         return null;
                     })
@@ -102,11 +102,20 @@ class OfficeResource extends Resource
                             })
                     ),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->getStateUsing(function ($record) {
+                        if ($record->created_at) {
+                            return Carbon::parse($record->created_at)->format('M j, Y : g:i A');
+                        }
+                        return null;
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->getStateUsing(function ($record) {
+                        if ($record->updated_at) {
+                            return Carbon::parse($record->updated_at)->format('M j, Y : g:i A');
+                        }
+                        return null;
+                    })
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -141,7 +150,6 @@ class OfficeResource extends Resource
                             ->body('A password setup email has been sent to the office.')
                             ->send();
                     }),
-                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -161,8 +169,8 @@ class OfficeResource extends Resource
     {
         return [
             'index' => Pages\ListOffices::route('/'),
-            'create' => Pages\CreateOffice::route('/create'),
             'edit' => Pages\EditOffice::route('/{record}/edit'),
+            'create' => Pages\CreateOffice::route('/create'),
         ];
     }
 
