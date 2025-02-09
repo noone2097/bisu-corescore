@@ -15,6 +15,10 @@ return [
             'driver' => 'session',
             'provider' => 'admin_accounts',
         ],
+        'office' => [
+            'driver' => 'session',
+            'provider' => 'offices',
+        ],
     ],
 
     'providers' => [
@@ -27,6 +31,11 @@ return [
             'model' => App\Models\AdminAccounts::class,
             'email' => 'admin_email',
         ],
+        'offices' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Office::class,
+            'email' => 'email',
+        ],
     ],
 
     'passwords' => [
@@ -38,6 +47,12 @@ return [
         ],
         'admin_accounts' => [
             'provider' => 'admin_accounts',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'offices' => [
+            'provider' => 'offices',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
