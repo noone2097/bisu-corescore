@@ -29,9 +29,16 @@ class OfficeAdminPanelProvider extends PanelProvider
             ->authGuard('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Blue,
             ])
-            ->authGuard('admin')
+            ->navigationGroups([
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label('Account Management')
+                    ->icon('heroicon-s-building-office-2')
+                    ->collapsible()
+            ])
+            ->collapsibleNavigationGroups(false)
+            ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/OfficeAdmin/Resources'), for: 'App\\Filament\\OfficeAdmin\\Resources')
             ->discoverPages(in: app_path('Filament/OfficeAdmin/Pages'), for: 'App\\Filament\\OfficeAdmin\\Pages')
             ->pages([
@@ -40,7 +47,10 @@ class OfficeAdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/OfficeAdmin/Widgets'), for: 'App\\Filament\\OfficeAdmin\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+            ])
+            ->resources([
+                \App\Filament\OfficeAdmin\Resources\OfficeResource::class,
+                \App\Filament\OfficeAdmin\Resources\AddOfficeResource::class,
             ])
             ->middleware([
                 EncryptCookies::class,
