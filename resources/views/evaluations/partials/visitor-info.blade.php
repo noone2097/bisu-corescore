@@ -25,13 +25,8 @@
     <!-- Digital Signature -->
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Digital Signature</label>
-        <div class="border border-gray-300 rounded-md p-4">
-            <canvas 
-                id="signatureCanvas" 
-                class="border border-gray-200 w-full bg-white rounded-md" 
-                width="600" 
-                height="200">
-            </canvas>
+        <div class="border border-gray-300 rounded-md p-4 max-w-3xl mx-auto">
+            <canvas id="signatureCanvas" width="600" height="200" class="w-full border border-gray-200 rounded-md cursor-crosshair touch-none"></canvas>
             <input type="hidden" name="signature" id="signature" required />
             <div class="mt-2 flex justify-between items-center">
                 <p class="text-sm text-gray-500">Please sign above using your mouse or touch screen</p>
@@ -45,81 +40,37 @@
     </div>
 </div>
 
-<!-- Signature Pad Script -->
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"></script>
 <script>
-    let signaturePad;
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        const canvas = document.getElementById('signatureCanvas');
-        
-        // Get canvas offset for coordinate adjustment
-        const rect = canvas.getBoundingClientRect();
-        const offsetX = rect.left;
-        const offsetY = rect.top;
-        
-        signaturePad = new SignaturePad(canvas, {
-            minWidth: 2,
-            maxWidth: 4,
-            penColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgb(255, 255, 255)",
-            throttle: 0, // Remove throttling for better responsiveness
-            velocityFilterWeight: 0.5, // Decrease velocity filtering for more accurate points
-        });
+var canvas = document.getElementById('signatureCanvas');
+var signaturePad = new SignaturePad(canvas, {
+    backgroundColor: 'rgb(255, 255, 255)',
+    penColor: 'rgb(0, 0, 0)',
+    minWidth: 2,
+    maxWidth: 4
+});
 
-        // Add coordinate adjustment for both mouse and touch events
-        canvas.addEventListener('mousemove', function(e) {
-            const point = {
-                x: e.clientX - offsetX,
-                y: e.clientY - offsetY
-            };
-            e._point = point;
-        }, { passive: true });
+function clearSignature() {
+    signaturePad.clear();
+    document.getElementById('signature').value = '';
+}
 
-        canvas.addEventListener('touchmove', function(e) {
-            const touch = e.touches[0];
-            const point = {
-                x: touch.clientX - offsetX,
-                y: touch.clientY - offsetY
-            };
-            e._point = point;
-        }, { passive: false });
-
-        // Prevent scrolling when touching the canvas
-        canvas.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-        });
-        
-        canvas.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-        });
-        
-        canvas.addEventListener('touchend', function(e) {
-            e.preventDefault();
-        });
-
-        // Update hidden input when signature changes
-        signaturePad.addEventListener("endStroke", () => {
-            document.getElementById('signature').value = signaturePad.toDataURL();
-        });
-    });
-
-    function clearSignature() {
-        signaturePad.clear();
-        document.getElementById('signature').value = '';
+// Handle form submission
+document.getElementById('evaluationForm').addEventListener('submit', function(e) {
+    if (signaturePad.isEmpty()) {
+        e.preventDefault();
+        alert('Please provide your signature before submitting.');
+        return;
     }
+    document.getElementById('signature').value = signaturePad.toDataURL();
+});
 
-    // Form submission validation
-    document.getElementById('evaluationForm').addEventListener('submit', function(e) {
-        if (!document.getElementById('signature').value) {
-            e.preventDefault();
-            alert('Please provide your signature before submitting.');
-        }
-    });
+// Prevent scrolling on touch devices
+canvas.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+}, { passive: false });
 </script>
-
-<style>
-    #signatureCanvas {
-        touch-action: none;
-    }
-</style>

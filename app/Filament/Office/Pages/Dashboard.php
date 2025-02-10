@@ -6,9 +6,36 @@ use Filament\Pages\Dashboard as BasePage;
 use Filament\Actions\Action;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Auth;
+use App\Filament\Office\Widgets\EvaluationStatsOverview;
 
 class Dashboard extends BasePage
 {
+    protected static ?string $navigationIcon = 'heroicon-o-home';
+
+    public function getHeaderWidgets(): array
+    {
+        return [
+            EvaluationStatsOverview::class,
+        ];
+    }
+
+    public function getWidgets(): array
+    {
+        return [
+
+        ];
+    }
+
+    public function getColumns(): int | array
+    {
+        return 2;
+    }
+
+    public function getHeaderWidgetsColumns(): int | array
+    {
+        return 2;
+    }
+
     public function getActions(): array
     {
         $office = Auth::guard('office')->user();

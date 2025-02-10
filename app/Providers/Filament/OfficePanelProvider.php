@@ -36,10 +36,6 @@ class OfficePanelProvider extends PanelProvider
                 \App\Filament\Office\Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Office/Widgets'), for: 'App\\Filament\\Office\\Widgets')
-            ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

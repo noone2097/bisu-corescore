@@ -5,19 +5,21 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Date of Visit (Petsa sa Pagbisita)</label>
-            <input type="date" 
-                   name="date_of_visit" 
-                   class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" 
-                   required 
-                   value="{{ date('Y-m-d') }}" />
+            <input type="date"
+                    name="date_of_visit"
+                    class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md bg-gray-100"
+                    value="{{ date('Y-m-d') }}"
+                    required
+                    readonly />
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Time of Visit (Oras sa Pagbisita)</label>
-            <input type="time" 
-                   name="time_of_visit" 
-                   class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" 
-                   required 
-                   value="{{ date('H:i') }}" />
+            <input type="time"
+                    name="time_of_visit"
+                    class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md bg-gray-100"
+                    value="{{ date('H:i') }}"
+                    required
+                    readonly />
         </div>
     </div>
 
