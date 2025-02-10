@@ -25,14 +25,16 @@
     <!-- Digital Signature -->
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Digital Signature</label>
-        <div class="border border-gray-300 rounded-md p-4 max-w-3xl mx-auto">
-            <canvas id="signatureCanvas" width="600" height="200" class="w-full border border-gray-200 rounded-md cursor-crosshair touch-none"></canvas>
+        <div id="signature-pad" class="border border-gray-300 rounded-md p-4 max-w-3xl mx-auto">
+            <div class="signature-pad--body relative h-[200px]">
+                <canvas class="absolute left-0 top-0 w-full h-full border border-gray-200 rounded-md"></canvas>
+            </div>
             <input type="hidden" name="signature" id="signature" required />
             <div class="mt-2 flex justify-between items-center">
                 <p class="text-sm text-gray-500">Please sign above using your mouse or touch screen</p>
                 <button type="button" 
                         class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50"
-                        onclick="clearSignature()">
+                        data-action="clear">
                     Clear
                 </button>
             </div>
@@ -40,20 +42,39 @@
     </div>
 </div>
 
+<style>
+.signature-pad--body canvas {
+    cursor: crosshair;
+    -ms-touch-action: none;
+    touch-action: none;
+    background: #fff;
+}
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"></script>
 <script>
-var canvas = document.getElementById('signatureCanvas');
-var signaturePad = new SignaturePad(canvas, {
-    backgroundColor: 'rgb(255, 255, 255)',
-    penColor: 'rgb(0, 0, 0)',
-    minWidth: 2,
-    maxWidth: 4
+var wrapper = document.getElementById("signature-pad");
+var canvas = wrapper.querySelector("canvas");
+var signaturePad = null;
+
+function resizeCanvas() {
+    var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+
+signaturePad = new SignaturePad(canvas, {
+    backgroundColor: 'rgb(255, 255, 255)'
 });
 
-function clearSignature() {
+document.querySelector('[data-action="clear"]').addEventListener("click", function() {
     signaturePad.clear();
     document.getElementById('signature').value = '';
-}
+});
 
 // Handle form submission
 document.getElementById('evaluationForm').addEventListener('submit', function(e) {
