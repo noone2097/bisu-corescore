@@ -22,7 +22,11 @@ class AdminAccounts extends Authenticatable implements FilamentUser, HasName
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $panel->getId() === 'office-admin' && $this->role === 'Office Admin';
+        return match($panel->getId()) {
+            'office-admin' => $this->role === 'Office Admin',
+            'research-admin' => $this->role === 'Research Admin',
+            default => false,
+        };
     }
 
     /**

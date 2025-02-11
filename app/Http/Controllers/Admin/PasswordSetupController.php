@@ -48,6 +48,7 @@ class PasswordSetupController extends Controller
         // Redirect based on admin role
         $loginRoute = match ($admin->role) {
             'Office Admin' => 'filament.office-admin.auth.login',
+            'Research Admin' => 'filament.research-admin.auth.login',
             default => 'filament.admin.auth.login',
         };
 

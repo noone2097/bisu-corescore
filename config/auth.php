@@ -19,6 +19,10 @@ return [
             'driver' => 'session',
             'provider' => 'offices',
         ],
+        'department' => [
+            'driver' => 'session',
+            'provider' => 'departments',
+        ],
     ],
 
     'providers' => [
@@ -33,6 +37,10 @@ return [
         'offices' => [
             'driver' => 'eloquent',
             'model' => App\Models\Office::class,
+        ],
+        'departments' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Department::class,
         ],
     ],
 
@@ -51,6 +59,12 @@ return [
         ],
         'offices' => [
             'provider' => 'offices',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'departments' => [
+            'provider' => 'departments',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
