@@ -16,7 +16,7 @@ class AddOfficeResource extends Resource
     protected static ?string $navigationGroup = 'Account Management';
     protected static ?string $navigationLabel = 'Add Office';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationIcon = 'heroicon-o-plus';
+    protected static ?string $navigationIcon = 'mdi-office-building-plus';
     
     public static function form(Form $form): Form
     {

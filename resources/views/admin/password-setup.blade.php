@@ -24,7 +24,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('admin.password.setup') }}" class="space-y-6">
+            <form method="POST" action="{{ route('admin.password.setup.store') }}" class="space-y-6">
                 @csrf
                 <input type="hidden" name="token" value="{{ $token }}">
 

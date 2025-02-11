@@ -2,11 +2,9 @@
 
 namespace App\Filament\OfficeAdmin\Pages;
 
-use Filament\Pages\Page;
+use Filament\Pages\Dashboard as BasePage;
 
-class Dashboard extends Page
+class Dashboard extends BasePage
 {
     protected static ?string $navigationIcon = 'heroicon-o-home';
-
-    protected static string $view = 'filament.office-admin.pages.dashboard';
 }

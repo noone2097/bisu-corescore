@@ -41,7 +41,7 @@ class AdminAccountsResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->label('Admin Name'),
-                Forms\Components\TextInput::make('admin_email')
+                Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255)
@@ -69,7 +69,7 @@ class AdminAccountsResource extends Resource
                     ->defaultImageUrl(asset('images/bisu_logo.png')),
                 Tables\Columns\TextColumn::make('admin_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('admin_email')
+                Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('role')
                     ->badge()

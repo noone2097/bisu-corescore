@@ -29,7 +29,7 @@ class OfficeAdminPanelProvider extends PanelProvider
             ->authGuard('admin')
             ->login()
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Green,
             ])
             ->navigationGroups([
                 \Filament\Navigation\NavigationGroup::make()

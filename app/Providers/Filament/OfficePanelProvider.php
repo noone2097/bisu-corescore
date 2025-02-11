@@ -26,7 +26,7 @@ class OfficePanelProvider extends PanelProvider
             ->id('office')
             ->path('office')
             ->authGuard('office')
-            ->login()
+            ->login(\App\Filament\Office\Pages\Auth\Login::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
