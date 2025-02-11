@@ -26,12 +26,13 @@ class DepartmentPanelProvider extends PanelProvider
             ->id('department')
             ->path('department')
             ->login()
+            ->authGuard('department')
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->discoverPages(in: app_path('Filament/Department/Pages'), for: 'App\\Filament\\Department\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                \App\Filament\Department\Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Department/Widgets'), for: 'App\\Filament\\Department\\Widgets')
             ->widgets([

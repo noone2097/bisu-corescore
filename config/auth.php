@@ -40,7 +40,7 @@ return [
         ],
         'departments' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Department::class,
+            'model' => App\Models\DepartmentAccount::class,
         ],
     ],
 

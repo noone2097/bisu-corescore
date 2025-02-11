@@ -11,7 +11,7 @@
         <div class="max-w-md w-full bg-white rounded-lg shadow-md p-8">
             <div class="text-center mb-8">
                 <h2 class="text-2xl font-bold text-gray-900">Set Up Your Password</h2>
-                <p class="text-gray-600 mt-2">Please create a secure password for your office account.</p>
+                <p class="text-gray-600 mt-2">Please create a secure password for your department account.</p>
             </div>
 
             @if ($errors->any())
@@ -24,7 +24,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('office.password.setup.store') }}" class="space-y-6">
+            <form method="POST" action="{{ route('department.password.setup.store') }}" class="space-y-6">
                 @csrf
                 <input type="hidden" name="token" value="{{ $token }}">
 

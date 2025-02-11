@@ -25,7 +25,7 @@ class DepartmentPasswordSetup extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('department.password.setup.form', ['token' => $this->token]);
+        $url = route('department.password.setup', ['token' => $this->token]);
 
         return (new MailMessage)
             ->subject('Department Account Password Setup')

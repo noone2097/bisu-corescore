@@ -34,3 +34,9 @@ Route::get('/office/password/setup/{token}', [OfficePasswordSetupController::cla
     ->name('office.password.setup');
 Route::post('/office/password/setup', [OfficePasswordSetupController::class, 'setupPassword'])
     ->name('office.password.setup.store');
+
+// Department Password Setup Routes
+Route::get('/department/password/setup/{token}', [App\Http\Controllers\Department\PasswordSetupController::class, 'showSetupForm'])
+    ->name('department.password.setup');
+Route::post('/department/password/setup', [App\Http\Controllers\Department\PasswordSetupController::class, 'setupPassword'])
+    ->name('department.password.setup.store');

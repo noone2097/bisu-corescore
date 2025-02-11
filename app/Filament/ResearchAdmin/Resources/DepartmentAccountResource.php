@@ -2,8 +2,9 @@
 
 namespace App\Filament\ResearchAdmin\Resources;
 
-use App\Filament\ResearchAdmin\Resources\DepartmentResource\Pages;
-use App\Models\Department;
+use App\Filament\ResearchAdmin\Resources\DepartmentAccountResource\Pages;
+use App\Models\DepartmentAccount;
+use App\Models\DepartmentEntity;
 use App\Notifications\DepartmentPasswordSetup;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -16,14 +17,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Filament\Notifications\Notification;
 
-class DepartmentResource extends Resource
+class DepartmentAccountResource extends Resource
 {
-    protected static ?string $model = Department::class;
+    protected static ?string $model = DepartmentAccount::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $navigationGroup = 'Department Management';
-    protected static ?string $navigationLabel = 'Manage Departments';
+    protected static ?string $navigationLabel = 'Department Accounts';
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -36,16 +37,33 @@ class DepartmentResource extends Resource
                     ->disk('public')
                     ->directory('department-avatars')
                     ->label('Department Avatar'),
+                Forms\Components\Select::make('department_entity_id')
+                    ->label('Department')
+                    ->relationship('departmentEntity', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('code')
+                            ->required()
+                            ->maxLength(50)
+                            ->unique(DepartmentEntity::class),
+                        Forms\Components\Textarea::make('description')
+                            ->maxLength(65535),
+                    ])
+                    ->required(),
                 Forms\Components\TextInput::make('department_name')
                     ->required()
                     ->maxLength(255)
-                    ->label('Department Name'),
+                    ->label('Account Name'),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true)
-                    ->label('Department Email'),
+                    ->label('Account Email'),
             ]);
     }
 
@@ -59,17 +77,17 @@ class DepartmentResource extends Resource
                     ->circular()
                     ->size(35)
                     ->defaultImageUrl(asset('images/bisu_logo.png')),
+                Tables\Columns\TextColumn::make('departmentEntity.name')
+                    ->label('Department')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('department_name')
+                    ->label('Account Name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->getStateUsing(function ($record) {
-                        if ($record->email_verified_at) {
-                            return Carbon::parse($record->email_verified_at)->format('M j, Y : g:i A');
-                        }
-                        return null;
-                    })
+                    Tables\Columns\TextColumn::make('email_verified_at')
+                    ->dateTime('M j, Y : g:i A')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
@@ -82,8 +100,8 @@ class DepartmentResource extends Resource
                             ->modalIcon('heroicon-o-exclamation-triangle')
                             ->modalHeading('Deactivate Department Account')
                             ->modalDescription('Are you sure you want to deactivate this department account? This will reset the password and require a new setup email.')
-                            ->hidden(fn (Department $record): bool => $record->status === 'inactive')
-                            ->action(function (Department $record): void {
+                            ->hidden(fn (DepartmentAccount $record): bool => $record->status === 'inactive')
+                            ->action(function (DepartmentAccount $record): void {
                                 $record->update([
                                     'status' => 'inactive',
                                     'password' => bcrypt('temporary-' . Str::random(16)),
@@ -101,13 +119,15 @@ class DepartmentResource extends Resource
                     ),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('M j, Y : g:i A')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('M j, Y : g:i A')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('department_entity')
+                    ->relationship('departmentEntity', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->label('Department'),
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         'active' => 'Active',
@@ -115,16 +135,15 @@ class DepartmentResource extends Resource
                     ])
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('send_setup_email')
-                    ->label('Send Setup Email')
+                    ->label('Send Email')
                     ->icon('heroicon-o-envelope')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->hidden(fn (Department $record): bool =>
+                    ->hidden(fn (DepartmentAccount $record): bool =>
                         $record->email_verified_at !== null || $record->status === 'active'
                     )
-                    ->action(function (Department $record): void {
+                    ->action(function (DepartmentAccount $record): void {
                         // Generate new token
                         $token = Str::random(64);
 
@@ -161,9 +180,9 @@ class DepartmentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDepartments::route('/'),
-            'create' => Pages\CreateDepartment::route('/create'),
-            'edit' => Pages\EditDepartment::route('/{record}/edit'),
+            'index' => Pages\ListDepartmentAccounts::route('/'),
+            'create' => Pages\CreateDepartmentAccount::route('/create'),
+            'edit' => Pages\EditDepartmentAccount::route('/{record}/edit'),
         ];
     }
 

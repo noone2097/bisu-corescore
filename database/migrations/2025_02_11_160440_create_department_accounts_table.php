@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('department_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('department_avatar')->nullable();
             $table->string('department_name');
@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('password');
             $table->string('password_reset_token')->nullable();
             $table->timestamp('password_reset_expires_at')->nullable();
-            $table->rememberToken();
+            $table->foreignId('department_entity_id')->constrained('department_entities');
             $table->string('status')->default('inactive');
+            $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('department_accounts');
     }
 };

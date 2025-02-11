@@ -43,8 +43,17 @@ class AdminAccounts extends Authenticatable implements FilamentUser, HasName
         'role',
         'password_reset_token',
         'password_reset_expires_at',
-        'email_verified_at'
+        'email_verified_at',
+        'department_entity_id'
     ];
+
+    /**
+     * Get the department entity this admin account belongs to
+     */
+    public function departmentEntity()
+    {
+        return $this->belongsTo(DepartmentEntity::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

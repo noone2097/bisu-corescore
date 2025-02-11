@@ -25,7 +25,7 @@ class OfficePasswordSetup extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('office.password.setup.form', ['token' => $this->token]);
+        $url = route('office.password.setup', ['token' => $this->token]);
 
         return (new MailMessage)
             ->subject('Office Account Password Setup')
