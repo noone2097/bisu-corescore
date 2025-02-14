@@ -22,8 +22,8 @@
             ✓
         </div>
 
-        <a href="{{ route('evaluations.form') }}" 
-           class="inline-block text-blue-600 hover:text-blue-800 transition-colors">
+        <a href="{{ route('evaluations.form.office', ['office' => $office_id]) }}"
+           class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
             Submit Another Evaluation
         </a>
     </div>

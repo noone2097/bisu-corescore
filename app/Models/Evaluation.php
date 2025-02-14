@@ -37,7 +37,7 @@ class Evaluation extends Model
      */
     protected $casts = [
         'date_of_visit' => 'date',
-        'time_of_visit' => 'datetime',
+        'time_of_visit' => 'string',
         'cc1' => 'integer',
         'cc2' => 'integer',
         'cc3' => 'integer',

@@ -20,7 +20,7 @@ Route::controller(EvaluationController::class)->group(function () {
     Route::get('/evaluation', 'index')->name('evaluations.form');
     Route::get('/evaluation/office/{office}', 'index')->name('evaluations.form.office');
     Route::post('/evaluation', 'store')->name('evaluations.store');
-    Route::get('/evaluation/thank-you', 'thankYou')->name('thank-you');
+    Route::get('/evaluation/thank-you/{office?}', 'thankYou')->name('thank-you');
 });
 
 // Admin Password Setup Routes

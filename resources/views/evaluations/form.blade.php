@@ -130,6 +130,7 @@
       x-data="{
           step: 1,
           previousStep: 1,
+          formSubmitting: false,
           updateStepClasses(stepNumber) {
               document.querySelectorAll('.form-step').forEach(el => {
                   if (parseInt(el.dataset.step) === stepNumber) {
@@ -196,18 +197,74 @@
             .logo-image.loaded {
                 opacity: 1;
             }
+            .header-text {
+                font-size: 7px;
+                line-height: 1.2;
+                @media (min-width: 640px) {
+                    font-size: 8px;
+                }
+            }
+            .motto-text {
+                font-size: 6px;
+                line-height: 1.1;
+                @media (min-width: 640px) {
+                    font-size: 7px;
+                }
+            }
         </style>
 
-        <div class="flex flex-col items-center mb-8">
-            <img src="{{ asset('images/bisu_logo.png') }}"
-                 alt="BISU Logo"
-                 class="h-16 w-auto logo-image"
-                 loading="lazy"
-                 decoding="async"
-                 width="90"
-                 height="90"
-                 onload="this.classList.add('loaded')" />
-            <p class="text-sm text-gray-600 mt-1">BISU - Calape Campus</p>
+        <div class="flex mb-8 items-start justify-between">
+            <!-- Left Section -->
+            <div class="flex items-start gap-2">
+                <!-- Logo -->
+                <div class="flex flex-col items-start w-14">
+                    <img src="{{ asset('images/bisu_logo.png') }}"
+                         alt="BISU Logo"
+                         class="h-14 w-auto logo-image"
+                         loading="lazy"
+                         decoding="async"
+                         width="90"
+                         height="90"
+                         onload="this.classList.add('loaded')" />
+                </div>
+                
+                <!-- Institution Details -->
+                <div class="flex flex-col justify-start mt-2">
+                    <p class="header-text text-gray-600">Republic of the Philippines</p>
+                    <p class="header-text font-medium text-gray-700">BOHOL ISLAND STATE UNIVERSITY</p>
+                    <p class="header-text text-gray-600">San Isidro, Calape, 6328 Bohol, Philippines</p>
+                    <p class="header-text text-gray-600">Office of the Administration</p>
+                    <p class="motto-text text-gray-500 italic mt-0.5">Balance | Integrity | Stewardship | Uprightness</p>
+                </div>
+            </div>
+
+            <!-- Additional Logos -->
+            <div class="flex items-center gap-2 mt-1">
+                <div class="w-11">
+                    <img src="{{ asset('images/bagong-pilipinas-logo.png') }}"
+                         alt="Bagong Pilipinas Logo"
+                         class="w-full h-auto logo-image"
+                         loading="lazy"
+                         decoding="async"
+                         onload="this.classList.add('loaded')" />
+                </div>
+                <div class="flex items-start gap-2">
+                    <div class="w-8">
+                        <img src="{{ asset('images/tuv-logo.png') }}"
+                             alt="TUV Logo"
+                             class="w-full h-auto logo-image"
+                             loading="lazy"
+                             decoding="async"
+                             onload="this.classList.add('loaded')" />
+                    </div>
+                    <div class="flex flex-col text-[5px] leading-tight text-gray-600 mt-1">
+                        <p>Management System</p>
+                        <p>ISO 9001:2015</p>
+                        <p class="mt-0.5">www.tuv.com</p>
+                        <p>ID: 9108658239</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <h2 class="text-[1.15rem] mb-4 text-center text-gray-700 tracking-wide font-['Inter']">
@@ -256,19 +313,17 @@
                     <button type="button"
                             x-show="step > 1"
                             @click="prevStep()"
-                            class="px-2 sm:px-4 py-2 sm:py-2.5 text-gray-600 hover:text-gray-900 transition-colors text-xs sm:text-base touch-manipulation">
+                            :disabled="formSubmitting"
+                            class="px-2 sm:px-4 py-2 sm:py-2.5 text-gray-600 hover:text-gray-900 transition-colors text-xs sm:text-base touch-manipulation disabled:opacity-50">
                         ← Back
                     </button>
+                    <!-- Only show Next button, Submit is in the visitor-info section -->
                     <button type="button"
                             x-show="step < 6"
                             @click="nextStep()"
-                            class="px-2 sm:px-4 py-2 sm:py-2.5 text-blue-600 hover:text-blue-800 transition-colors ml-auto text-xs sm:text-base touch-manipulation">
+                            :disabled="formSubmitting"
+                            class="px-2 sm:px-4 py-2 sm:py-2.5 text-blue-600 hover:text-blue-800 transition-colors ml-auto text-xs sm:text-base touch-manipulation disabled:opacity-50">
                         Next →
-                    </button>
-                    <button type="submit"
-                            x-show="step === 6"
-                            class="bg-blue-500 text-white px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg hover:bg-blue-600 transition-colors ml-auto text-xs sm:text-base touch-manipulation">
-                        Submit
                     </button>
                 </div>
             </div>
@@ -276,8 +331,51 @@
 
         <!-- Main Form -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-100 mb-20">
-            <form action="{{ route('evaluations.store') }}" method="POST" id="evaluationForm" class="p-3 sm:p-6 h-full">
+            <form x-data="{ formSubmitting: false }"
+                  action="{{ route('evaluations.store') }}"
+                  method="POST"
+                  id="evaluationForm"
+                  class="p-3 sm:p-6 h-full"
+                  x-on:submit="
+                       $event.preventDefault();
+                       if (step !== 6) {
+                           nextStep();
+                           return;
+                       }
+                       // Check if all required fields are filled
+                       if (!$event.target.checkValidity()) {
+                           $event.target.reportValidity();
+                           return;
+                       }
+                       if (formSubmitting) return;
+                       formSubmitting = true;
+                       $event.target.submit();
+                   "
+                  novalidate>
                 @csrf
+                <!-- Display Validation Errors -->
+                @if ($errors->any())
+                    <div class="bg-red-50 text-red-600 p-4 rounded-lg mb-6">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                            <p class="font-medium">Please correct the following errors:</p>
+                        </div>
+                        <ul class="mt-2 list-disc list-inside space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <!-- Debug Info -->
+                        @if (config('app.debug'))
+                            <div class="mt-4 p-2 bg-gray-100 rounded text-sm">
+                                <strong>Debug Info:</strong>
+                                <pre class="mt-1 whitespace-pre-wrap">{{ print_r($errors->toArray(), true) }}</pre>
+                            </div>
+                        @endif
+                    </div>
+                @endif
 <!-- Form Steps Container -->
 <div class="relative">
                     <!-- Step 1: Visit Information -->

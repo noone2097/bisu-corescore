@@ -5,19 +5,25 @@
     <div>
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Date of Visit (Petsa sa Pagbisita)</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Date of Visit<br>
+                    <span class="font-normal">(Petsa sa Pagbisita)</span>
+                </label>
                 <input type="date"
                         name="date_of_visit"
-                        class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md bg-gray-100"
+                        class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md bg-gray-100 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden [-moz-appearance:textfield]"
                         value="{{ date('Y-m-d') }}"
                         required
                         readonly />
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Time of Visit (Oras sa Pagbisita)</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Time of Visit<br>
+                    <span class="font-normal">(Oras sa Pagbisita)</span>
+                </label>
                 <input type="time"
                         name="time_of_visit"
-                        class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md bg-gray-100"
+                        class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md bg-gray-100 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden [-moz-appearance:textfield]"
                         value="{{ date('H:i') }}"
                         required
                         readonly />
