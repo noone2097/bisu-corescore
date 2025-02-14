@@ -50,9 +50,9 @@
                 @php
                     $ratings = [
                         ['field' => 'responsiveness', 'label' => 'Responsiveness', 'vernacular' => '(Pag abi-abi)'],
-                        ['field' => 'reliability', 'label' => 'Reliability (Quality)', 'vernacular' => '(Masalign sa serbisyo)'],
+                        ['field' => 'reliability', 'label' => 'Reliability (Quality)', 'vernacular' => '(Masaligan sa serbisyo)'],
                         ['field' => 'access_facilities', 'label' => 'Access & Facilities', 'vernacular' => '(Sayon tuoron ang opisina, komportable ug maayo ang mga pasilidad)'],
-                        ['field' => 'communication', 'label' => 'Communication', 'vernacular' => '(Pamagd sa pag pasabot)'],
+                        ['field' => 'communication', 'label' => 'Communication', 'vernacular' => '(Pamaagi sa pag pasabot)'],
                         ['field' => 'costs', 'label' => 'Costs', 'vernacular' => '(Kantidad sa balayrunon)'],
                         ['field' => 'integrity', 'label' => 'Integrity', 'vernacular' => '(Matinud-anun, makiangayon,ug patas)'],
                         ['field' => 'assurance', 'label' => 'Assurance', 'vernacular' => '(Kapaniguruan sa serbisyo)'],

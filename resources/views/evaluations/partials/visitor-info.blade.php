@@ -1,5 +1,5 @@
 <!-- Visitor Information and Signature -->
-<div class="space-y-6">
+<div class="space-y-6" x-data="{ scrollToInput(el) { setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300) } }">
     <h3 class="text-lg font-medium text-gray-900">Visitor Information</h3>
     
     <!-- Name Fields -->
@@ -8,17 +8,19 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
             <input type="text" 
                    name="first_name" 
-                   class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" 
+                   class="w-[95%] sm:w-[90%] px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                    required 
-                   placeholder="Enter your first name" />
+                   placeholder="Enter your first name"
+                   @focus="scrollToInput($el)" />
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
             <input type="text" 
                    name="last_name" 
-                   class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" 
+                   class="w-[95%] sm:w-[90%] px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                    required 
-                   placeholder="Enter your last name" />
+                   placeholder="Enter your last name"
+                   @focus="scrollToInput($el)" />
         </div>
     </div>
 
@@ -30,7 +32,7 @@
                 <canvas id="signatureCanvas" class="absolute inset-0 w-full h-full rounded-md"></canvas>
             </div>
             <input type="hidden" name="signature" id="signature" required />
-            <div class="mt-2 flex justify-between items-center">
+            <div class="mt-2 flex justify-between items-center space-x-4">
                 <p class="text-sm text-gray-500">Please sign above using your mouse or touch screen</p>
                 <button type="button" 
                         class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50"

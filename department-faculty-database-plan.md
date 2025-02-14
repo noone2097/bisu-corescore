@@ -218,3 +218,22 @@ CREATE INDEX idx_student_evaluations ON faculty_evaluations(student_id, evaluati
 3. Foreign key constraints to maintain referential integrity
 4. Required fields marked as NOT NULL
 5. Evaluation period control through is_active flag
+
+## Description
+
+1. The schema is designed with clear separation of concerns:
+   - Core entities (departments, faculty, students)
+   - Teaching assignments and subjects
+   - Evaluation system (periods, criteria, responses)
+
+2. Key features implemented:
+   - Year level restrictions through faculty_subject_assignments
+   - Evaluation access control through relationship tables
+   - Efficient querying with proper indexes
+   - Data integrity through constraints
+
+3. Next recommended steps:
+   - Review the schema design and relationships
+   - Implement the migrations
+   - Set up the models and relationships
+   - Create the necessary controllers and forms

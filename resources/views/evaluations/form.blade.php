@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Customer Satisfaction Feedback Form - BISU</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -10,10 +10,27 @@
     @include('evaluations.partials.styles')
     <style>
         .form-step {
-            display: none;
+            width: 100%;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.4s ease-in-out;
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
         }
         .form-step.active {
-            display: block;
+            opacity: 1;
+            transform: translateX(0);
+            visibility: visible;
+            height: auto;
+            overflow: visible;
+        }
+        .form-step.previous {
+            opacity: 0;
+            transform: translateX(-50px);
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
         }
         .progress-container {
             position: relative;
@@ -33,21 +50,27 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            padding: 0 20px;
+            padding: 0 10px;
         }
         .progress-step {
             position: relative;
             flex: 1;
             text-align: center;
-            padding: 0 10px;
+            padding: 0 4px;
         }
         .progress-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
+            @media (min-width: 640px) {
+                width: 12px;
+                height: 12px;
+            }
             border-radius: 50%;
             background: #E2E8F0;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
         .progress-dot.active {
             background: #3B82F6;
@@ -56,6 +79,8 @@
         }
         .progress-dot.completed {
             background: #3B82F6;
+            transform: scale(1);
+            box-shadow: none;
         }
         .step-label {
             position: absolute;
@@ -83,8 +108,12 @@
 
         @keyframes particle-animation {
             0% {
-                transform: translate(-50%, -50%) scale(1);
+                transform: translate(-50%, -50%) scale(0);
                 opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0.5;
             }
             100% {
                 transform: translate(-50%, -50%) scale(2);
@@ -97,9 +126,23 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-white to-blue-50 min-h-screen" 
+<body class="bg-gradient-to-br from-white to-blue-50 min-h-screen"
       x-data="{
           step: 1,
+          previousStep: 1,
+          updateStepClasses(stepNumber) {
+              document.querySelectorAll('.form-step').forEach(el => {
+                  if (parseInt(el.dataset.step) === stepNumber) {
+                      el.classList.add('active');
+                      el.classList.remove('previous');
+                  } else if (parseInt(el.dataset.step) === this.previousStep) {
+                      el.classList.add('previous');
+                      el.classList.remove('active');
+                  } else {
+                      el.classList.remove('active', 'previous');
+                  }
+              });
+          },
           createParticles(dot) {
               const colors = ['#3B82F6', '#60A5FA', '#93C5FD'];
               const numParticles = 8;
@@ -125,19 +168,25 @@
           nextStep() {
               if (this.step < 6) {
                   const currentDot = document.querySelector(`.progress-dot[class*='active']`);
-                  this.createParticles(currentDot);
-                  setTimeout(() => {
-                      this.step++;
-                  }, 100);
+                  this.previousStep = this.step;
+                  this.step++;
+                  this.updateStepClasses(this.step);
+                  // Wait for the DOM to update with the new active dot
+                  requestAnimationFrame(() => {
+                      const newDot = document.querySelector(`.progress-dot[class*='active']`);
+                      this.createParticles(newDot);
+                  });
               }
           },
           prevStep() {
               if (this.step > 1) {
+                  this.previousStep = this.step;
                   this.step--;
+                  this.updateStepClasses(this.step);
               }
           }
       }">
-    <div class="max-w-5xl mx-auto px-4 py-12">
+    <div class="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-12">
         <!-- Logo -->
         <style>
             .logo-image {
@@ -161,102 +210,108 @@
             <p class="text-sm text-gray-600 mt-1">BISU - Calape Campus</p>
         </div>
 
-        <h2 class="text-[1.65rem] mb-4 text-center text-gray-700 tracking-wide font-['Inter']">
+        <h2 class="text-[1.15rem] mb-4 text-center text-gray-700 tracking-wide font-['Inter']">
             <span class="font-light">Customer </span>
             <span class="font-light">Satisfaction </span>
             <span class="font-light">Feedback Form</span>
         </h2>
         
-        <!-- Progress Indicator -->
-        <div class="progress-container">
-            <div class="progress-track">
-                <div class="progress-dots">
-                    <div class="progress-step">
-                        <div class="progress-dot" :class="{ 'active': step === 1, 'completed': step > 1 }"></div>
-                        <div class="step-label" :class="{ 'active': step === 1 }"><span class="sm:hidden">Visit<br>Info</span><span class="hidden sm:inline">Visit Info</span></div>
+        <!-- Progress Indicator and Navigation -->
+        <div class="mb-8">
+            <!-- Progress Dots -->
+            <div class="progress-container mb-6">
+                <div class="progress-track">
+                    <div class="progress-dots">
+                        <div class="progress-step">
+                            <div class="progress-dot" :class="{ 'active': step === 1, 'completed': step > 1 }"></div>
+                            <div class="step-label" :class="{ 'active': step === 1 }"><span class="sm:hidden">Visit<br>Info</span><span class="hidden sm:inline">Visit Info</span></div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="progress-dot" :class="{ 'active': step === 2, 'completed': step > 2 }"></div>
+                            <div class="step-label" :class="{ 'active': step === 2 }"><span class="sm:hidden">Personal<br>Info</span><span class="hidden sm:inline">Personal Info</span></div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="progress-dot" :class="{ 'active': step === 3, 'completed': step > 3 }"></div>
+                            <div class="step-label" :class="{ 'active': step === 3 }"><span class="sm:hidden">CC<br>Questions</span><span class="hidden sm:inline">CC Questions</span></div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="progress-dot" :class="{ 'active': step === 4, 'completed': step > 4 }"></div>
+                            <div class="step-label" :class="{ 'active': step === 4 }"><span class="sm:hidden">Ratings</span><span class="hidden sm:inline">Ratings</span></div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="progress-dot" :class="{ 'active': step === 5, 'completed': step > 5 }"></div>
+                            <div class="step-label" :class="{ 'active': step === 5 }"><span class="sm:hidden">Comments</span><span class="hidden sm:inline">Comments</span></div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="progress-dot" :class="{ 'active': step === 6 }"></div>
+                            <div class="step-label" :class="{ 'active': step === 6 }"><span class="sm:hidden">Signature</span><span class="hidden sm:inline">Signature</span></div>
+                        </div>
                     </div>
-                    <div class="progress-step">
-                        <div class="progress-dot" :class="{ 'active': step === 2, 'completed': step > 2 }"></div>
-                        <div class="step-label" :class="{ 'active': step === 2 }"><span class="sm:hidden">Personal<br>Info</span><span class="hidden sm:inline">Personal Info</span></div>
-                    </div>
-                    <div class="progress-step">
-                        <div class="progress-dot" :class="{ 'active': step === 3, 'completed': step > 3 }"></div>
-                        <div class="step-label" :class="{ 'active': step === 3 }"><span class="sm:hidden">CC<br>Questions</span><span class="hidden sm:inline">CC Questions</span></div>
-                    </div>
-                    <div class="progress-step">
-                        <div class="progress-dot" :class="{ 'active': step === 4, 'completed': step > 4 }"></div>
-                        <div class="step-label" :class="{ 'active': step === 4 }"><span class="sm:hidden">Ratings</span><span class="hidden sm:inline">Ratings</span></div>
-                    </div>
-                    <div class="progress-step">
-                        <div class="progress-dot" :class="{ 'active': step === 5, 'completed': step > 5 }"></div>
-                        <div class="step-label" :class="{ 'active': step === 5 }"><span class="sm:hidden">Comments</span><span class="hidden sm:inline">Comments</span></div>
-                    </div>
-                    <div class="progress-step">
-                        <div class="progress-dot" :class="{ 'active': step === 6 }"></div>
-                        <div class="step-label" :class="{ 'active': step === 6 }"><span class="sm:hidden">Signature</span><span class="hidden sm:inline">Signature</span></div>
-                    </div>
+                </div>
+            </div>
+            
+            <!-- Fixed Navigation Buttons -->
+            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+                <div class="max-w-5xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex justify-between">
+                    <button type="button"
+                            x-show="step > 1"
+                            @click="prevStep()"
+                            class="px-2 sm:px-4 py-2 sm:py-2.5 text-gray-600 hover:text-gray-900 transition-colors text-xs sm:text-base touch-manipulation">
+                        ← Back
+                    </button>
+                    <button type="button"
+                            x-show="step < 6"
+                            @click="nextStep()"
+                            class="px-2 sm:px-4 py-2 sm:py-2.5 text-blue-600 hover:text-blue-800 transition-colors ml-auto text-xs sm:text-base touch-manipulation">
+                        Next →
+                    </button>
+                    <button type="submit"
+                            x-show="step === 6"
+                            class="bg-blue-500 text-white px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg hover:bg-blue-600 transition-colors ml-auto text-xs sm:text-base touch-manipulation">
+                        Submit
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Main Form -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-100">
-            <form action="{{ route('evaluations.store') }}" method="POST" id="evaluationForm" class="p-6">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 mb-20">
+            <form action="{{ route('evaluations.store') }}" method="POST" id="evaluationForm" class="p-3 sm:p-6 h-full">
                 @csrf
-
-                <!-- Form Steps Container -->
-                <div class="relative">
+<!-- Form Steps Container -->
+<div class="relative">
                     <!-- Step 1: Visit Information -->
-                    <div :class="{ 'block': step === 1, 'hidden': step !== 1 }">
+                    <div class="form-step" data-step="1" :class="{ 'active': step === 1, 'previous': step > 1 }">
                         @include('evaluations.partials.visit-info')
                     </div>
 
                     <!-- Step 2: Personal Information -->
-                    <div x-cloak :class="{ 'block': step === 2, 'hidden': step !== 2 }">
+                    <div class="form-step" data-step="2" x-cloak :class="{ 'active': step === 2, 'previous': step > 2 }">
                         @include('evaluations.partials.personal-info')
                     </div>
 
                     <!-- Step 3: CC Questions -->
-                    <div x-cloak :class="{ 'block': step === 3, 'hidden': step !== 3 }">
+                    <div class="form-step" data-step="3" x-cloak :class="{ 'active': step === 3, 'previous': step > 3 }">
                         @include('evaluations.partials.cc-questions')
                     </div>
 
                     <!-- Step 4: Satisfaction Ratings -->
-                    <div x-cloak :class="{ 'block': step === 4, 'hidden': step !== 4 }">
+                    <div class="form-step" data-step="4" x-cloak :class="{ 'active': step === 4, 'previous': step > 4 }">
                         @include('evaluations.partials.satisfaction-ratings')
                     </div>
 
                     <!-- Step 5: Comments -->
-                    <div x-cloak :class="{ 'block': step === 5, 'hidden': step !== 5 }">
+                    <div class="form-step [&>div>*]:my-2 [&>div>div]:mb-3" data-step="5" x-cloak :class="{ 'active': step === 5, 'previous': step > 5 }">
                         @include('evaluations.partials.comments')
                     </div>
 
                     <!-- Step 6: Visitor Information and Signature -->
-                    <div x-cloak :class="{ 'block': step === 6, 'hidden': step !== 6 }">
+                    <div class="form-step [&>div>*]:my-2 [&>div>div]:mb-3" data-step="6" x-cloak :class="{ 'active': step === 6 }">
                         @include('evaluations.partials.visitor-info')
                     </div>
                 </div>
 
-                <!-- Navigation Buttons -->
-                <div class="flex justify-between mt-12 pt-6 border-t border-gray-100">
-                    <button type="button" 
-                            x-show="step > 1" 
-                            @click="prevStep()"
-                            class="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors">
-                        ← Previous
-                    </button>
-                    <button type="button" 
-                            x-show="step < 6" 
-                            @click="nextStep()"
-                            class="px-4 py-2 text-blue-600 hover:text-blue-800 transition-colors ml-auto">
-                        Next →
-                    </button>
-                    <button type="submit" 
-                            x-show="step === 6" 
-                            class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors ml-auto">
-                        Submit Feedback
-                    </button>
-                </div>
+                <!-- End of form steps -->
             </form>
         </div>
     </div>
