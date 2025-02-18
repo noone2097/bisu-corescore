@@ -1,44 +1,54 @@
-<div class="p-4 space-y-4">
+<div class="py-12 px-8">
     <div class="text-center">
-        <h2 class="text-lg font-bold mb-4">Evaluation Form QR Code</h2>
-        
-        <!-- QR Code Image -->
-        <div class="mb-6">
-            <img src="{{ $qrCodePath }}" alt="QR Code" class="mx-auto">
-            <a href="{{ $qrCodePath }}" download="evaluation-qr-code.svg" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg mt-2 hover:bg-primary-700">
-                <x-heroicon-s-arrow-down-tray class="w-4 h-4 mr-2"/>
-                Download QR Code
-            </a>
+        <!-- QR Code -->
+        <div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg inline-block shadow-sm">
+                <img src="{{ $qrCodePath }}" alt="QR Code" class="w-48 h-48">
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-10 mb-16">
+            <div class="flex gap-3 justify-center pb-4">
+                <a href="{{ $qrCodePath }}"
+                    download="feedback-qr-code.svg"
+                    class="inline-flex items-center px-3 py-1.5 text-xs font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 transition-colors duration-150 shadow-sm">
+                    <x-heroicon-s-arrow-down-tray class="w-4 h-4 mr-1.5"/>
+                    Download QR
+                </a>
+                <a href="{{ route('feedback.qr.pdf', ['qrCodePath' => basename($qrCodePath)]) }}"
+                    target="_blank"
+                    class="inline-flex items-center px-3 py-1.5 text-xs font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 transition-colors duration-150 shadow-sm">
+                    <x-heroicon-s-printer class="w-4 h-4 mr-1.5"/>
+                    Print PDF
+                </a>
+            </div>
         </div>
 
         <!-- Direct Link -->
-        <div class="mt-6">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-2">Direct Link:</label>
-            <div class="flex items-center space-x-2">
+        <div class="max-w-sm mx-auto pt-4" x-data="{ isCheck: false }">
+            <div class="flex items-center gap-2">
                 <input type="text"
                        value="{{ $evaluationUrl }}"
-                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 text-gray-900"
+                       class="w-full px-3 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-white rounded-md shadow-sm focus:ring-1 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400"
                        readonly
                        x-ref="urlInput">
-                <button x-on:click="
-                        await navigator.clipboard.writeText($refs.urlInput.value);
-                        $dispatch('notify', {
-                            message: 'Link copied to clipboard',
-                            status: 'success'
-                        });
-                    "
-                        class="inline-flex items-center px-3 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors">
-                    <x-heroicon-s-clipboard class="w-4 h-4 mr-2"/>
-                    Copy
+                <button type="button"
+                        @click="
+                            navigator.clipboard.writeText($refs.urlInput.value);
+                            isCheck = true;
+                            setTimeout(() => isCheck = false,3000);"
+                        class="inline-flex items-center justify-center px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-750 shadow-sm transition-all duration-150">
+                    <template x-if="!isCheck">
+                        <x-heroicon-s-clipboard class="w-5 h-5 text-gray-600 dark:text-white"/>
+                    </template>
+                    <template x-if="isCheck">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#22c55e">
+                            <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                        </svg>
+                    </template>
                 </button>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-.qr-code-container img {
-    max-width: 300px;
-    height: auto;
-}
-</style>

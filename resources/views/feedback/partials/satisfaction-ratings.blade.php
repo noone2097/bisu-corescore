@@ -64,7 +64,7 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-2 py-1 text-xs text-gray-700 border border-gray-300">{{ $index + 1 }}</td>
                         <td class="px-3 py-1 border border-gray-300">
-                            <div class="text-sm font-medium text-gray-700">{{ $rating['label'] }}</div>
+                            <div class="text-sm font-medium text-gray-700">{{ $rating['label'] }} <span class="text-red-500">*</span></div>
                             <div class="text-[10px] text-gray-500">{{ $rating['vernacular'] }}</div>
                         </td>
                         @for($score = 5; $score >= 0; $score--)

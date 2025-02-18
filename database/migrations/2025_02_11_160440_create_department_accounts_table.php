@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('password_reset_token')->nullable();
             $table->timestamp('password_reset_expires_at')->nullable();
-            $table->foreignId('department_entity_id')->constrained('department_entities');
+            $table->foreignId('department_entity_id')->nullable();
             $table->string('status')->default('inactive');
             $table->rememberToken();
             $table->timestamps();

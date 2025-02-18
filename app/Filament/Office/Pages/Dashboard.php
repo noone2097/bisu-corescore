@@ -6,7 +6,7 @@ use Filament\Pages\Dashboard as BasePage;
 use Filament\Actions\Action;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Auth;
-use App\Filament\Office\Widgets\EvaluationStatsOverview;
+use App\Filament\Office\Widgets\FeedbackStatsOverview;
 
 class Dashboard extends BasePage
 {
@@ -15,7 +15,7 @@ class Dashboard extends BasePage
     public function getHeaderWidgets(): array
     {
         return [
-            EvaluationStatsOverview::class,
+            FeedbackStatsOverview::class,
         ];
     }
 
@@ -39,7 +39,7 @@ class Dashboard extends BasePage
     public function getActions(): array
     {
         $office = Auth::guard('office')->user();
-        $evaluationUrl = route('evaluations.form.office', ['office' => $office->id]);
+        $evaluationUrl = route('feedback.form.office', ['office' => $office->id]);
         
         // Generate QR code
         $qrCode = QrCode::format('svg')
@@ -54,8 +54,8 @@ class Dashboard extends BasePage
 
         return [
             Action::make('generateQR')
-                ->label('Evaluation QR Code')
-                ->color('success')
+                ->label('Feedback Form QR Code')
+                ->color('primary')
                 ->icon('heroicon-o-qr-code')
                 ->modalContent(view('filament.office.pages.qr-modal', [
                     'qrCodePath' => asset($qrCodePath),

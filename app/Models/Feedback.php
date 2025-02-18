@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Evaluation extends Model
+class Feedback extends Model
 {
     protected $fillable = [
         'visitor_id',
@@ -52,7 +52,7 @@ class Evaluation extends Model
     ];
 
     /**
-     * Get the visitor that owns the evaluation.
+     * Get the visitor that owns the feedback.
      */
     public function visitor(): BelongsTo
     {
@@ -60,7 +60,7 @@ class Evaluation extends Model
     }
 
     /**
-     * Get the office that was evaluated.
+     * Get the office that received the feedback.
      */
     public function office(): BelongsTo
     {
@@ -68,7 +68,7 @@ class Evaluation extends Model
     }
 
     /**
-     * Get the average rating for this evaluation.
+     * Get the average rating for this feedback.
      */
     public function getAverageRatingAttribute(): float
     {

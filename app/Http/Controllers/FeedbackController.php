@@ -4,18 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Office;
 use App\Models\Visitor;
-use App\Models\Evaluation;
+use App\Models\Feedback;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
-class EvaluationController extends Controller
+class FeedbackController extends Controller
 {
     public function index(Office $office = null)
     {
-        $offices = Office::all();
+        $offices = Office::where('status', 'active')->get();
         $selectedOffice = $office;
         $isOfficeLocked = !is_null($office);
 
-        return view('evaluations.form', compact('offices', 'selectedOffice', 'isOfficeLocked'));
+        return view('feedback.form', compact('offices', 'selectedOffice', 'isOfficeLocked'));
     }
 
     public function store(Request $request)
@@ -121,21 +122,21 @@ class EvaluationController extends Controller
                 throw $e;
             }
 
-            // Remove visitor fields from evaluation data
+            // Remove visitor fields from feedback data
             unset($validated['first_name'], $validated['last_name'], $validated['signature']);
             
-            // Add visitor_id to evaluation data
+            // Add visitor_id to feedback data
             $validated['visitor_id'] = $visitor->id;
 
-            // Create evaluation
-            $evaluation = Evaluation::create($validated);
+            // Create feedback
+            $feedback = Feedback::create($validated);
 
-            \Log::info('Successfully created evaluation:', [
-                'evaluation_id' => $evaluation->id,
+            \Log::info('Successfully created feedback:', [
+                'feedback_id' => $feedback->id,
                 'visitor_id' => $visitor->id
             ]);
 
-            return view('evaluations.thank-you', [
+            return view('feedback.thank-you', [
                 'office_id' => $validated['office_id']
             ]);
 
@@ -146,19 +147,59 @@ class EvaluationController extends Controller
             ]);
             throw $e;
         } catch (\Exception $e) {
-            \Log::error('Error saving evaluation:', [
+            \Log::error('Error saving feedback:', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'There was an error saving your evaluation. Please try again.']);
+                ->withErrors(['error' => 'There was an error saving your feedback. Please try again.']);
         }
     }
 
     public function thankYou(Office $office = null)
     {
-        return view('evaluations.thank-you')->with('office', $office);
+        return view('feedback.thank-you')->with('office', $office);
+    }
+
+    public function generateQrPdf($qrCodePath)
+    {
+        try {
+            // Clean the filename and ensure it's just the basename
+            $filename = basename($qrCodePath);
+            
+            // Get the full path of the QR code
+            $fullQrPath = public_path('qr-codes/' . $filename);
+            
+            if (!file_exists($fullQrPath)) {
+                throw new \Exception("QR Code file not found: {$filename}");
+            }
+
+            // Read the file contents
+            $qrCodeContents = file_get_contents($fullQrPath);
+            if ($qrCodeContents === false) {
+                throw new \Exception("Could not read QR Code file: {$filename}");
+            }
+
+            // Generate PDF
+            $pdf = PDF::loadView('pdf.qr-code', [
+                'qrCodePath' => $fullQrPath,
+                'qrCodeData' => base64_encode($qrCodeContents)
+            ]);
+
+            // Set paper size to A4
+            $pdf->setPaper('a4', 'portrait');
+
+            // Return the PDF for download
+            return $pdf->stream('feedback-qr-code.pdf');
+            
+        } catch (\Exception $e) {
+            \Log::error('Error generating QR code PDF:', [
+                'error' => $e->getMessage(),
+                'qrCodePath' => $qrCodePath
+            ]);
+            abort(404, $e->getMessage());
+        }
     }
 }

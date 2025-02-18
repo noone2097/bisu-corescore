@@ -2,13 +2,13 @@
 
 namespace App\Filament\Office\Widgets;
 
-use App\Models\Evaluation;
+use App\Models\Feedback;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
 
-class EvaluationStatsOverview extends StatsOverviewWidget
+class FeedbackStatsOverview extends StatsOverviewWidget
 {
     protected static ?int $sort = 1;
     
@@ -16,21 +16,21 @@ class EvaluationStatsOverview extends StatsOverviewWidget
     {
         $office = Auth::guard('office')->user();
         
-        $evaluations = Evaluation::where('office_id', $office->id);
+        $feedback = Feedback::where('office_id', $office->id);
         $today = Carbon::today();
         
-        $totalEvaluations = $evaluations->count();
-        $todayEvaluations = $evaluations->whereDate('created_at', $today)->count();
+        $totalFeedback = $feedback->count();
+        $todayFeedback = $feedback->whereDate('created_at', $today)->count();
         
-        $averageRating = $evaluations->get()->avg(function ($evaluation) {
-            return $evaluation->average_rating;
+        $averageRating = $feedback->get()->avg(function ($feedback) {
+            return $feedback->average_rating;
         });
 
-        $latestEvaluation = $evaluations->latest()->first();
+        $latestFeedback = $feedback->latest()->first();
 
         return [
-            Stat::make('Total Evaluations', $totalEvaluations)
-                ->description('All time evaluations')
+            Stat::make('Total Feedback', $totalFeedback)
+                ->description('All time feedback')
                 ->color('success')
                 ->icon('heroicon-o-document-text'),
             
@@ -39,12 +39,12 @@ class EvaluationStatsOverview extends StatsOverviewWidget
                 ->color('primary')
                 ->icon('heroicon-o-star'),
             
-            Stat::make("Today's Evaluations", $todayEvaluations)
-                ->description('Evaluations received today')
+            Stat::make("Today's Feedback", $todayFeedback)
+                ->description('Feedback received today')
                 ->color('warning')
                 ->icon('heroicon-o-calendar'),
             
-            Stat::make('Latest Evaluation', $latestEvaluation ? $latestEvaluation->created_at->diffForHumans() : 'No evaluations yet')
+            Stat::make('Latest Feedback', $latestFeedback ? $latestFeedback->created_at->diffForHumans() : 'No feedback yet')
                 ->description('Most recent feedback')
                 ->color('info')
                 ->icon('heroicon-o-clock'),

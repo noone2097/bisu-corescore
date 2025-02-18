@@ -1,42 +1,50 @@
-<!-- Visitor Information and Signature -->
-<div class="space-y-6" x-data="{ scrollToInput(el) { setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300) } }">
-    <h3 class="text-lg font-medium text-gray-900">Visitor Information</h3>
-    
-    <!-- Name Fields -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-            <input type="text"
-                   name="first_name"
-                   class="w-[95%] sm:w-[90%] px-3 py-2 md:px-4 md:py-3 border rounded-md focus:ring-2 focus:ring-blue-500 transition-all {{ $errors->has('first_name') ? 'border-red-500 bg-red-50' : 'border-gray-300' }}"
-                   required
-                   value="{{ old('first_name') }}"
-                   placeholder="Enter your first name"
-                   @focus="scrollToInput($el)" />
-            @error('first_name')
-                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-            @enderror
+    <!-- Visitor Information and Signature -->
+    <div class="space-y-6" x-data="{ scrollToInput(el) { setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300) } }">
+        <h3 class="text-lg font-medium text-gray-900">Visitor Information</h3>
+        
+        <!-- Name Fields -->
+        <div class="space-y-6">
+        <div class="flex flex-col items-center">
+            <div class="w-[95%] sm:w-[90%]">
+                <label class="block text-sm font-medium text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
+                <input type="text"
+                    name="first_name"
+                    class="w-full px-3 py-2 md:px-4 md:py-3 border rounded-md focus:ring-2 focus:ring-blue-500 transition-all {{ $errors->has('first_name') ? 'border-red-500 bg-red-50' : 'border-gray-300' }}"
+                    required
+                    value="{{ old('first_name') }}"
+                    placeholder="Enter your first name"
+                    @focus="scrollToInput($el)"
+                    required />
+                @error('first_name')
+                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-            <input type="text"
-                   name="last_name"
-                   class="w-[95%] sm:w-[90%] px-3 py-2 md:px-4 md:py-3 border rounded-md focus:ring-2 focus:ring-blue-500 transition-all {{ $errors->has('last_name') ? 'border-red-500 bg-red-50' : 'border-gray-300' }}"
-                   required
-                   value="{{ old('last_name') }}"
-                   placeholder="Enter your last name"
-                   @focus="scrollToInput($el)" />
-            @error('last_name')
-                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-            @enderror
-         </div>
-     </div>
+        
+        <div class="flex flex-col items-center">
+            <div class="w-[95%] sm:w-[90%]">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Last Name <span class="text-red-500">*</span></label>
+                <input type="text"
+                    name="last_name"
+                    class="w-full px-3 py-2 md:px-4 md:py-3 border rounded-md focus:ring-2 focus:ring-blue-500 transition-all {{ $errors->has('last_name') ? 'border-red-500 bg-red-50' : 'border-gray-300' }}"
+                    required
+                    value="{{ old('last_name') }}"
+                    placeholder="Enter your last name"
+                    @focus="scrollToInput($el)"
+                    required />
+                @error('last_name')
+                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+        </div>
+    </div>
 
-    <!-- Digital Signature -->
-    <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Digital Signature <span class="text-red-500">*</span></label>
-        <div id="signature-pad" class="border {{ $errors->has('signature') ? 'border-red-500 bg-red-50' : 'border-gray-300' }} rounded-md p-4 max-w-3xl mx-auto">
-            <div class="signature-pad--body h-[150px] sm:h-[200px] relative bg-white overflow-hidden">
+        <!-- Digital Signature -->
+        <div class="flex flex-col items-center">
+            <div class="w-[95%] sm:w-[90%]">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Digital Signature <span class="text-red-500">*</span></label>
+                <div id="signature-pad" class="border {{ $errors->has('signature') ? 'border-red-500 bg-red-50' : 'border-gray-300' }} rounded-md p-3 sm:p-4">
+            <div class="signature-pad--body h-[120px] sm:h-[180px] relative bg-white overflow-hidden">
                 <canvas id="signatureCanvas" class="absolute inset-0 w-full h-full rounded-md"></canvas>
             </div>
             <input type="hidden" name="signature" id="signature" required />
@@ -51,24 +59,25 @@
         </div>
     </div>
 
-    <!-- Submit Button -->
-    <div class="mt-8 text-center space-y-4">
-        @if ($errors->any())
+        <!-- Submit Button -->
+        <div class="mt-8 text-center space-y-4">
+            @if ($errors->any())
             <p class="text-sm text-red-600">
                 Please fix the errors above before submitting the form
             </p>
-        @endif
-        <button type="submit"
-                x-bind:disabled="formSubmitting"
-                x-bind:class="{ 'opacity-50 cursor-not-allowed': formSubmitting }"
-                class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors text-base shadow-sm inline-flex items-center justify-center min-w-[200px]">
-            <span x-text="formSubmitting ? 'Submitting...' : 'Submit Form'"></span>
-            <svg x-show="formSubmitting" class="animate-spin ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-        </button>
-    </div>
+            @endif
+            <button type="submit"
+                    x-bind:disabled="formSubmitting"
+                    x-bind:class="{ 'opacity-50 cursor-not-allowed': formSubmitting }"
+                    class="border border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100 px-6 py-2.5 rounded-md transition-all duration-200 text-sm font-medium inline-flex items-center justify-center min-w-[180px]">
+                <span x-text="formSubmitting ? 'Submitting...' : 'Submit'"></span>
+                <svg x-show="formSubmitting" class="animate-spin ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
 </div>
 
 <style>
@@ -101,12 +110,14 @@ function initSignaturePad() {
         var rect = canvas.getBoundingClientRect();
         
         // Set a maximum size for the canvas to prevent large signature data
-        var maxWidth = Math.min(rect.width, 600);
-        var maxHeight = Math.min(rect.height, 200);
+        // Get device width
+        var isMobile = window.matchMedia("(max-width: 640px)").matches;
+        var maxWidth = rect.width;
+        var maxHeight = isMobile ? rect.height : Math.min(rect.height, 200);
         
         // Set canvas display size
-        canvas.style.width = maxWidth + 'px';
-        canvas.style.height = maxHeight + 'px';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
         
         // Set actual size in memory (scaled to account for extra pixel density)
         canvas.width = maxWidth * ratio;

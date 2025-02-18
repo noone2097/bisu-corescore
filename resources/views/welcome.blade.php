@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    x-data="{ isDark: localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches) }"
+    :class="{ 'dark': isDark }"
+>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -204,21 +208,87 @@
                 background-size: 200% 200%;
                 animation: gradient 20s ease infinite;
             }
+
+            /* Mobile optimizations */
+            @media (max-width: 768px) {
+                .vision-mission-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 1.5rem;
+                    padding: 0 1rem;
+                }
+                
+                .goals-grid {
+                    grid-template-columns: 1fr;
+                    gap: 0.75rem;
+                    padding: 0 1rem;
+                }
+
+                .text-lg {
+                    font-size: 1.125rem;
+                    line-height: 1.75rem;
+                }
+
+                .text-xl {
+                    font-size: 1.25rem;
+                    line-height: 1.75rem;
+                }
+
+                .bg-gradient-animate {
+                    min-height: 100vh;
+                }
+
+                .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+                    margin-top: 1rem;
+                }
+
+                .p-4 {
+                    padding: 0.75rem;
+                }
+
+                .p-6 {
+                    padding: 1rem;
+                }
+
+                .mt-4 {
+                    margin-top: 0.75rem;
+                }
+
+                .goals-item {
+                    padding: 0.5rem;
+                    font-size: 0.875rem;
+                    line-height: 1.25rem;
+                }
+            }
+
+            @media (max-width: 640px) {
+                .fixed.inset-0 {
+                    position: relative;
+                }
+
+                .grid {
+                    min-height: 100vh;
+                }
+
+                .h-full {
+                    height: auto;
+                }
+            }
         </style>
     </head>
-    <body class="antialiased" x-data="{ isDark: localStorage.theme === 'dark' }" :class="{ 'dark': isDark }">
-        <div class="fixed inset-0">
-            <div class="h-full grid grid-cols-1 lg:grid-cols-2">
-                <!-- Left Column -->
-                <div class="relative bg-gradient-animate bg-gradient-to-b from-blue-900/90 to-indigo-900/90 text-white p-6 flex flex-col items-center justify-between space-y-4">
+    <body class="antialiased">
+        <div class="relative lg:fixed lg:inset-0">
+            <div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+                <!-- Left Column (hidden on mobile) -->
+                <div class="hidden lg:flex bg-gradient-animate bg-gradient-to-b from-blue-900/90 to-indigo-900/90 text-white p-3 md:p-6 flex-col items-center justify-between min-h-screen lg:min-h-full gap-3 md:gap-4">
                     <!-- Logo and Title -->
                     <div class="reveal-section flex flex-col items-center opacity-0">
                         <div class="relative">
                             <div class="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-transparent rounded-full blur-xl"></div>
-                            <img src="/images/bisu_logo.png" alt="BISU Logo" class="w-24 h-24 object-contain relative z-10" />
+                            <img src="/images/bisu_logo.png" alt="BISU Logo" class="w-20 md:w-24 h-20 md:h-24 object-contain relative z-10" />
                         </div>
                         <div class="text-center mt-4">
-                            <h1 class="text-xl font-medium tracking-wider mb-1">
+                            <h1 class="text-lg md:text-xl font-medium tracking-wider mb-1">
                                 BOHOL ISLAND STATE UNIVERSITY
                             </h1>
                             <p class="text-white/70 text-sm">Calape Campus</p>
@@ -226,10 +296,10 @@
                     </div>
 
                     <!-- Mission and Vision -->
-                    <div class="grid grid-cols-2 gap-8 w-full px-2 -mt-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8 w-full px-1 md:px-2 mt-2 md:-mt-8 vision-mission-grid">
                         <div class="reveal-section opacity-0 translate-y-8 px-2">
                             <div class="relative text-center">
-                                <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-6xl font-bold text-white/5 select-none">V</span>
+                                <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-5xl md:text-6xl font-bold text-white/5 select-none">V</span>
                                 <h2 class="text-xs font-medium mb-3 uppercase tracking-widest text-white/90">Vision</h2>
                                 <p class="text-xs text-white/70 leading-relaxed text-justify goals-item">
                                     A premier Science and Technology university for the formation of world class and virtuous human resource for sustainable development in Bohol and the Country.
@@ -239,7 +309,7 @@
 
                         <div class="reveal-section opacity-0 translate-y-8">
                             <div class="relative text-center">
-                                <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-6xl font-bold text-white/5 select-none">M</span>
+                                <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-5xl md:text-6xl font-bold text-white/5 select-none">M</span>
                                 <h2 class="text-xs font-medium mb-3 uppercase tracking-widest text-white/90">Mission</h2>
                                 <p class="text-xs text-white/70 leading-relaxed text-justify goals-item">
                                     BISU is committed to provide quality higher education in the arts and sciences, as well as in the professional and technological fields; undertake research and development and extension services for the sustainable development of Bohol and the country.
@@ -249,11 +319,11 @@
                     </div>
 
                     <!-- Goals -->
-                    <div class="reveal-section opacity-0 translate-y-8 text-center w-full px-2 -mt-4">
+                    <div class="reveal-section opacity-0 translate-y-8 text-center w-full px-1 md:px-2 mt-1 md:-mt-4">
                         <div class="relative">
-                            <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-6xl font-bold text-white/5 select-none">G</span>
-                            <h2 class="text-xs font-medium mb-4 uppercase tracking-widest text-white/90">Goals</h2>
-                            <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-white/70">
+                            <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-4xl md:text-6xl font-bold text-white/5 select-none">G</span>
+                            <h2 class="text-xs font-medium mb-2 md:mb-4 uppercase tracking-widest text-white/90">Goals</h2>
+                            <div class="grid md:grid-cols-2 gap-1.5 md:gap-2 text-xs text-white/70 goals-grid">
                                 <div class="goals-item">Excellence in Instruction and Learning</div>
                                 <div class="goals-item">Excellence in Research and Innovation</div>
                                 <div class="goals-item">Excellence in Community Engagement</div>
@@ -263,32 +333,55 @@
                     </div>
 
                     <!-- Copyright Footer -->
-                    <div class="text-center text-xs text-white/50 mt-6">
+                    <div class="text-center text-xs text-white/50 mt-4 md:mt-6">
                         <p>&copy; 2025 BISU CoreScore. All rights reserved.</p>
                     </div>
                 </div>
 
                 <!-- Right Column -->
-                <div class="p-8 flex flex-col items-center justify-center bg-background">
+                <div class="w-full p-4 md:p-8 flex flex-col items-center justify-center bg-background min-h-screen lg:min-h-full col-span-1 lg:col-auto">
                     <!-- Theme Toggle -->
                     <div class="absolute top-4 right-4 z-10">
-                        <button class="theme-toggle" @click="isDark = !isDark; localStorage.theme = isDark ? 'dark' : 'light'">
+                        <button 
+                            class="theme-toggle" 
+                            @click="isDark = !isDark;
+                                   localStorage.theme = isDark ? 'dark' : 'light';
+                                   if (isDark) { document.documentElement.classList.add('dark') }
+                                   else { document.documentElement.classList.remove('dark') }"
+                            aria-label="Toggle dark mode"
+                        >
                             <!-- Sun icon -->
-                            <svg x-show="!isDark" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <svg 
+                                x-cloak 
+                                x-show="!isDark" 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                class="w-6 h-6" 
+                                viewBox="0 0 24 24" 
+                                stroke-width="1.5" 
+                                stroke="currentColor"
+                            >
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                             </svg>
                             <!-- Moon icon -->
-                            <svg x-show="isDark" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="display: none;">
+                            <svg 
+                                x-cloak 
+                                x-show="isDark" 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                class="w-6 h-6" 
+                                viewBox="0 0 24 24" 
+                                stroke-width="1.5" 
+                                stroke="currentColor"
+                            >
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
                             </svg>
                         </button>
                     </div>
 
-                    <div class="reveal-section opacity-0 max-w-md w-full space-y-8 text-center">
+                    <div class="reveal-section opacity-0 max-w-md w-full space-y-6 md:space-y-8 text-center">
                         <div class="space-y-2">
                             <div class="relative inline-block">
                                 <span class="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent blur-xl"></span>
-                                <h2 class="relative text-2xl font-medium tracking-wide text-foreground">
+                                <h2 class="relative text-xl md:text-2xl font-medium tracking-wide text-foreground">
                                     BISU CoreScore
                                 </h2>
                             </div>
@@ -297,7 +390,7 @@
 
                         <div class="relative">
                             <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent rounded-lg"></div>
-                            <div class="relative bg-card text-card-foreground shadow-sm backdrop-blur-sm rounded-lg px-6 py-6 space-y-3">
+                            <div class="relative bg-card text-card-foreground shadow-sm backdrop-blur-sm rounded-lg px-4 md:px-6 py-4 md:py-6 space-y-3">
                                 <h3 class="text-base font-medium">About CoreScore</h3>
                                 <p class="text-sm text-muted-foreground leading-relaxed">
                                     BISU CoreScore is an innovative performance evaluation system designed to streamline and enhance the assessment process for our faculty and staff. Experience a modern, efficient, and transparent way of managing evaluations.
@@ -324,8 +417,8 @@
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 // Reveal animations
-                const leftSections = document.querySelectorAll('.fixed .grid > div:first-child .reveal-section');
-                const rightSections = document.querySelectorAll('.fixed .grid > div:last-child .reveal-section');
+                const leftSections = document.querySelectorAll('.grid > div:first-child .reveal-section');
+                const rightSections = document.querySelectorAll('.grid > div:last-child .reveal-section');
 
                 const revealSide = (sections, delay = 0) => {
                     sections.forEach((section, index) => {

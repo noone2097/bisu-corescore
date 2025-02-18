@@ -23,9 +23,9 @@ return new class extends Migration
         // Add department_entity_id to department_accounts table if it exists
         if (Schema::hasTable('department_accounts')) {
             Schema::table('department_accounts', function (Blueprint $table) {
-                $table->foreignId('department_entity_id')
-                    ->nullable()
-                    ->constrained('department_entities')
+                $table->foreign('department_entity_id')
+                    ->references('id')
+                    ->on('department_entities')
                     ->onDelete('set null');
             });
         }

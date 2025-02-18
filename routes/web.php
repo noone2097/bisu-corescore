@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\Admin\PasswordSetupController as AdminPasswordSetupController;
 use App\Http\Controllers\Office\PasswordSetupController as OfficePasswordSetupController;
 
@@ -15,12 +15,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Evaluation Form Routes
-Route::controller(EvaluationController::class)->group(function () {
-    Route::get('/evaluation', 'index')->name('evaluations.form');
-    Route::get('/evaluation/office/{office}', 'index')->name('evaluations.form.office');
-    Route::post('/evaluation', 'store')->name('evaluations.store');
-    Route::get('/evaluation/thank-you/{office?}', 'thankYou')->name('thank-you');
+// Feedback Form Routes
+Route::controller(FeedbackController::class)->group(function () {
+    Route::get('/feedback', 'index')->name('feedback.form');
+    Route::get('/feedback/office/{office}', 'index')->name('feedback.form.office');
+    Route::post('/feedback', 'store')->name('feedback.store');
+    Route::get('/feedback/thank-you/{office?}', 'thankYou')->name('thank-you');
+    Route::get('/feedback/qr-pdf/{qrCodePath}', 'generateQrPdf')->name('feedback.qr.pdf')->where('qrCodePath', '.*');
 });
 
 // Admin Password Setup Routes
