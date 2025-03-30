@@ -55,11 +55,11 @@ return new class extends Migration
                 'is_active' => true,
             ]);
 
-            // Two faculty members
-            for ($i = 1; $i <= 2; $i++) {
+            // 4 faculty members
+            for ($i = 1; $i <= 4; $i++) {
                 DB::table('users')->insert([
                     'avatar' => null,
-                    'name' => "Faculty {$i} - {$dept->name}",
+                    'name' => "Faculty {$i} - {$dept->code}",
                     'email' => strtolower($dept->code) . ".faculty{$i}@bisu.edu.ph",
                     'gender' => null,
                     'email_verified_at' => now(),

@@ -47,15 +47,22 @@ return new class extends Migration
         foreach ($departments as $dept) {
             // Create one student for each year level in each department
             for ($year = 1; $year <= 4; $year++) {
-                $currentYear = date('Y');
-                // Generate studentID: YYYY-DEPTCODE-XXX where XXX is a counter
-                $studentID = sprintf('%d-%s-%03d', $currentYear, $dept->code, $year);
+                // Generate unique 6 digit student ID
+                do {
+                    $studentID = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+                    $exists = DB::table('students')
+                        ->where('studentID', $studentID)
+                        ->exists();
+                } while ($exists);
+
+                // Randomly select gender
+                $gender = rand(0, 1) ? 'male' : 'female';
                 
                 DB::table('students')->insert([
                     'avatar' => null,
                     'studentID' => $studentID,
                     'name' => "Student {$year} - {$dept->name}",
-                    'gender' => null,
+                    'gender' => $gender,
                     'email' => strtolower("{$studentID}@bisu.edu.ph"),
                     'email_verified_at' => now(),
                     'password' => bcrypt('student-pass'),
