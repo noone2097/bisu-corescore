@@ -119,7 +119,8 @@ class FacultyAccountsResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar')
                     ->circular()
-                    ->defaultImageUrl(url('/images/default_pfp.svg')),
+                    ->disk('public')
+                    ->defaultImageUrl(asset('images/default_pfp.svg')),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Account Name')
                     ->searchable(),
