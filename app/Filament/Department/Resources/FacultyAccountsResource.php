@@ -63,7 +63,7 @@ class FacultyAccountsResource extends Resource
                                     ->helperText('Enter the complete name of the faculty member'),
                                 Forms\Components\TextInput::make('email')
                                     ->email()
-                                    ->unique()
+                                    ->unique(ignoreRecord: true)
                                     ->required()
                                     ->maxLength(255)
                                     ->helperText('This email will be used for account setup'),
