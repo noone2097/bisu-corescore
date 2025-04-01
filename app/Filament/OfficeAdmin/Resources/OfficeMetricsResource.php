@@ -25,6 +25,9 @@ class OfficeMetricsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
 
+    protected static ?string $modelLabel = 'Office Ratings Metrics';
+    protected static ?string $pluralModelLabel = 'Office Rating Metrics';
+
     protected static ?string $navigationLabel = 'Office Metrics';
 
     protected static ?string $navigationGroup = 'Ratings';
